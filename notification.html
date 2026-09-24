@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>beLucky Notifications</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ===============================
+         TOPBAR
+    ================================ -->
+
+    <header class="topbar">
+
+        <a class="brand" href="index.html">
+            be<span>Lucky</span>
+        </a>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="profile.html">Profile</a>
+            <div class="bini"><a
+                href="notification.html" class="notification-nav active" title="Notifications">
+                <span class="bell-icon">🔔</span>
+
+                <span id="notificationBadge" class="notification-badge">
+                    0
+                </span>
+            </a>
+            </div>
+
+            <a href="login.html">
+                Login
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- ===============================
+         MAIN
+    ================================ -->
+
+    <main class="notification-container">
+
+        <section class="notification-panel">
+
+            <!-- HEADER -->
+
+            <div class="notification-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        beLucky CENTER
+                    </p>
+
+                    <h1>
+                        Notifications
+                    </h1>
+
+                    <p class="subtitle">
+                        Stay updated with the latest announcements,
+                        offers and news.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="header-line"></div>
+
+
+            <!-- NOTIFICATION LIST -->
+
+            <div
+                id="notificationList"
+                class="notification-list"
+            ></div>
+
+
+            <!-- EMPTY STATE -->
+
+            <div
+                id="emptyNotification"
+                class="empty-notification"
+            >
+
+                <div class="empty-icon">
+                    🔔
+                </div>
+
+                <h2>
+                    No notifications
+                </h2>
+
+                <p>
+                    You don't have any notifications right now.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER -->
+
+        <footer class="footer">
+
+            <span></span>
+
+            <p>
+                © 2026 beLucky. All rights reserved.
+            </p>
+
+            <span></span>
+
+        </footer>
+
+    </main>
+
+<script>
+
+// ===============================
+// LOAD ADMIN NOTIFICATIONS
+// ===============================
+
+let notifications = [];
+
+
+// Current logged-in user
+function getCurrentUser() {
+
+    try {
+
+        const currentUser =
+            localStorage.getItem("a66aCurrentUser");
+
+        if (!currentUser) {
+            return null;
+        }
+
+        return JSON.parse(currentUser);
+
+    } catch (error) {
+
+        console.error(
+            "Current user read error:",
+            error
+        );
+
+        return null;
+    }
+}
+
+
+// Load notifications saved by Admin
+function loadNotifications() {
+
+    const allNotifications =
+        JSON.parse(
+            localStorage.getItem(
+                "a66aNotifications"
+            )
+        ) || [];
+
+
+    const currentUser =
+        getCurrentUser();
+
+
+    if (!currentUser) {
+
+        notifications = [];
+
+        return;
+    }
+
+
+    const currentUserId =
+        currentUser.id;
+
+
+    // All Users + Particular User
+    notifications =
+        allNotifications.filter(
+            notification => {
+
+                return (
+                    notification.target === "all" ||
+                    notification.target === currentUserId
+                );
+
+            }
+        );
+
+
+    // Newest first
+    notifications.sort(
+        (a, b) =>
+            new Date(b.createdAt) -
+            new Date(a.createdAt)
+    );
+
+
+    // Add display information
+    notifications =
+        notifications.map(
+            notification => ({
+
+                ...notification,
+
+                icon:
+                    notification.icon ||
+                    "🔔",
+
+                time:
+                    notification.time ||
+                    formatTime(
+                        notification.createdAt
+                    ),
+
+                read:
+                    notification.read || false
+
+            })
+        );
+
+}
+
+
+// ===============================
+// ELEMENTS
+// ===============================
+
+const notificationList =
+    document.getElementById(
+        "notificationList"
+    );
+
+
+const emptyNotification =
+    document.getElementById(
+        "emptyNotification"
+    );
+
+
+const notificationBadge =
+    document.getElementById(
+        "notificationBadge"
+    );
+
+
+const readAllBtn =
+    document.getElementById(
+        "readAllBtn"
+    );
+
+
+// ===============================
+// TIME
+// ===============================
+
+function formatTime(dateString) {
+
+    if (!dateString) {
+        return "";
+    }
+
+
+    const date =
+        new Date(dateString);
+
+
+    if (isNaN(date.getTime())) {
+        return "";
+    }
+
+
+    const now =
+        new Date();
+
+
+    const difference =
+        now - date;
+
+
+    const minutes =
+        Math.floor(
+            difference / 60000
+        );
+
+
+    if (minutes < 1) {
+        return "Just now";
+    }
+
+
+    if (minutes < 60) {
+        return minutes + " min ago";
+    }
+
+
+    const hours =
+        Math.floor(
+            minutes / 60
+        );
+
+
+    if (hours < 24) {
+        return hours + " hours ago";
+    }
+
+
+    const days =
+        Math.floor(
+            hours / 24
+        );
+
+
+    if (days === 1) {
+        return "1 day ago";
+    }
+
+
+    return days + " days ago";
+}
+
+
+// ===============================
+// RENDER
+// ===============================
+
+function renderNotifications() {
+
+    notificationList.innerHTML = "";
+
+
+    const unreadCount =
+        notifications.filter(
+            notification =>
+                !notification.read
+        ).length;
+
+
+    // Badge
+    if (unreadCount > 0) {
+
+        notificationBadge.textContent =
+            unreadCount;
+
+        notificationBadge.style.display =
+            "flex";
+
+    } else {
+
+        notificationBadge.style.display =
+            "none";
+    }
+
+
+    // Empty state
+    if (
+        notifications.length === 0
+    ) {
+
+        notificationList.style.display =
+            "none";
+
+        emptyNotification.style.display =
+            "block";
+
+        return;
+    }
+
+
+    notificationList.style.display =
+        "flex";
+
+    emptyNotification.style.display =
+        "none";
+
+
+    // Create cards
+    notifications.forEach(
+        notification => {
+
+            const card =
+                document.createElement(
+                    "article"
+                );
+
+
+            card.className =
+                "notification-card";
+
+
+            if (!notification.read) {
+
+                card.classList.add(
+                    "unread"
+                );
+            }
+
+
+            card.innerHTML = `
+
+                <div class="notification-icon">
+                    ${escapeHTML(
+                        notification.icon
+                    )}
+                </div>
+
+
+                <div class="notification-content">
+
+                    <h3>
+                        ${escapeHTML(
+                            notification.title
+                        )}
+                    </h3>
+
+
+                    <p>
+                        ${escapeHTML(
+                            notification.message
+                        )}
+                    </p>
+
+
+                    <span class="notification-time">
+                        ${escapeHTML(
+                            notification.time
+                        )}
+                    </span>
+
+                </div>
+
+
+                ${
+                    !notification.read
+                    ? `
+                        <span
+                            class="unread-dot"
+                            title="Unread"
+                        ></span>
+                    `
+                    : ""
+                }
+
+
+                <button
+                    class="delete-notification"
+                    type="button"
+                    title="Delete notification"
+                    aria-label="Delete notification"
+                >
+                    ×
+                </button>
+
+            `;
+
+
+            // ===============================
+            // MARK AS READ
+            // ===============================
+
+            card.addEventListener(
+                "click",
+                event => {
+
+                    if (
+                        event.target.closest(
+                            ".delete-notification"
+                        )
+                    ) {
+                        return;
+                    }
+
+
+                    notification.read =
+                        true;
+
+
+                    renderNotifications();
+
+                }
+            );
+
+
+            // ===============================
+            // DELETE
+            // ===============================
+
+            const deleteButton =
+                card.querySelector(
+                    ".delete-notification"
+                );
+
+
+            deleteButton.addEventListener(
+                "click",
+                event => {
+
+                    event.stopPropagation();
+
+
+                    // Remove from current list
+                    notifications =
+                        notifications.filter(
+                            item =>
+                                item.id !==
+                                notification.id
+                        );
+
+
+                    // Also remove from localStorage
+                    const allNotifications =
+                        JSON.parse(
+                            localStorage.getItem(
+                                "a66aNotifications"
+                            )
+                        ) || [];
+
+
+                    const updated =
+                        allNotifications.filter(
+                            item =>
+                                item.id !==
+                                notification.id
+                        );
+
+
+                    localStorage.setItem(
+                        "a66aNotifications",
+                        JSON.stringify(updated)
+                    );
+
+
+                    renderNotifications();
+
+                }
+            );
+
+
+            notificationList.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+// ===============================
+// MARK ALL AS READ
+// ===============================
+
+if (readAllBtn) {
+
+    readAllBtn.addEventListener(
+        "click",
+        () => {
+
+            notifications.forEach(
+                notification => {
+
+                    notification.read =
+                        true;
+
+                }
+            );
+
+
+            renderNotifications();
+
+        }
+    );
+
+}
+
+
+// ===============================
+// ESCAPE HTML
+// ===============================
+
+function escapeHTML(value) {
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+// ===============================
+// START
+// ===============================
+
+loadNotifications();
+
+renderNotifications();
+
+</script>
+</body>
+
+</html>

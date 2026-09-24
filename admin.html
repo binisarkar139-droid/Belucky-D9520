@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>beLucky Admin</title>
+
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+    <!-- ==================================================
+         ADMIN SHELL
+    =================================================== -->
+
+    <div class="admin-shell">
+
+        <!-- ==================================================
+             SIDEBAR
+        =================================================== -->
+
+        <aside class="sidebar">
+
+            <div class="admin-brand">
+                beLucky <span>ADMIN</span>
+            </div>
+
+            <button
+                class="side active"
+                data-section="dashboard"
+                type="button">
+                Dashboard
+            </button>
+
+            <button
+                class="side"
+                data-section="lotteries"
+                type="button">
+                Products
+            </button>
+
+            <button
+                class="side"
+                data-section="tickets"
+                type="button">
+                Tickets
+            </button>
+
+            <button
+                class="side"
+                data-section="users"
+                type="button">
+                Users
+            </button>
+
+            <button
+                class="side"
+                data-section="search"
+                type="button">
+                Search
+            </button>
+
+            <button
+                class="side"
+                data-section="notifications"
+                type="button">
+                Notifications
+            </button>
+
+            <button
+                class="side"
+                data-section="settings"
+                type="button">
+                Settings
+            </button>
+
+            <a
+                class="back"
+                href="index.html">
+                ← User Website
+            </a>
+
+        </aside>
+
+
+        <!-- ==================================================
+             MAIN
+        =================================================== -->
+
+        <main class="main">
+
+
+            <!-- ==================================================
+                 DASHBOARD
+            =================================================== -->
+
+            <section
+                id="dashboard"
+                class="section active">
+
+                <div class="head">
+
+                    <div>
+                        <p class="eyebrow">
+                            A66A CONTROL CENTER
+                        </p>
+
+                        <h1>
+                            Dashboard
+                        </h1>
+                    </div>
+
+                    <button
+                        class="primary"
+                        id="addProductBtn"
+                        type="button">
+                        + Add Product
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="stats"
+                    class="stats">
+                </div>
+
+
+                <div class="panel">
+
+                    <h2>
+                        Recent purchases
+                    </h2>
+
+                    <div id="recent">
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ==================================================
+                 PRODUCTS
+            =================================================== -->
+
+            <section
+                id="lotteries"
+                class="section">
+
+                <div class="head">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            PRODUCT MANAGEMENT
+                        </p>
+
+                        <h1>
+                            Products
+                        </h1>
+
+                    </div>
+
+                    <button
+                        class="primary"
+                        id="addProductBtn2"
+                        type="button">
+                        + New Product
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="productAdmin"
+                    class="cards">
+                </div>
+
+            </section>
+
+
+
+            <!-- ==================================================
+                 TICKETS
+            =================================================== -->
+
+            <section
+                id="tickets"
+                class="section">
+
+                <div class="head">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            TICKET CONTROL
+                        </p>
+
+                        <h1>
+                            Tickets by Product
+                        </h1>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="ticketProducts"
+                    class="cards">
+                </div>
+
+
+                <div
+                    id="ticketPanel"
+                    class="panel hidden">
+                </div>
+
+            </section>
+
+
+
+            <!-- ==================================================
+                 USERS
+            =================================================== -->
+
+            <section
+                id="users"
+                class="section">
+
+                <div class="head">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            USER MANAGEMENT
+                        </p>
+
+                        <h1>
+                            Users
+                        </h1>
+
+                    </div>
+
+
+                    <input
+                        id="userFilter"
+                        type="text"
+                        placeholder="Search name / mobile / ID">
+
+                </div>
+
+
+                <div class="panel table-wrap">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Profile
+                                </th>
+
+                                <th>
+                                    Name
+                                </th>
+
+                                <th>
+                                    Mobile
+                                </th>
+
+                                <th>
+                                    User ID
+                                </th>
+
+                                <th>
+                                    Tickets
+                                </th>
+
+                                <th>
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="usersTable">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <div
+                    id="userDetail"
+                    class="panel hidden">
+                </div>
+
+            </section>
+
+
+
+            <!-- ==================================================
+                 SEARCH
+            =================================================== -->
+
+            <section
+                id="search"
+                class="section">
+
+                <div class="head">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            PRECISE LOOKUP
+                        </p>
+
+                        <h1>
+                            Lottery Number Search
+                        </h1>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel search-box">
+
+                    <label>
+                        Lottery Type
+
+                        <select id="searchLottery">
+                        </select>
+
+                    </label>
+
+
+                    <label>
+                        Ticket Number
+
+                        <input
+                            id="searchNumber"
+                            type="text"
+                            placeholder="B1000000000">
+
+                    </label>
+
+
+                    <button
+                        class="primary"
+                        id="searchTicketBtn"
+                        type="button">
+
+                        Search Number
+
+                    </button>
+
+
+                    <div id="numberResult">
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ==================================================
+                 NOTIFICATIONS
+            =================================================== -->
+
+            <section
+                id="notifications"
+                class="section">
+
+                <div class="head">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            NOTIFICATION CONTROL
+                        </p>
+
+                        <h1>
+                            Notifications
+                        </h1>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SEND NOTIFICATION -->
+
+                <div class="panel">
+
+                    <h2>
+                        Send Notification
+                    </h2>
+
+
+                    <label>
+
+                        Notification Title
+
+                        <input
+                            id="notificationTitle"
+                            type="text"
+                            placeholder="Enter notification title">
+
+                    </label>
+
+
+                    <label>
+
+                        Notification Message
+
+                        <textarea
+                            id="notificationMessage"
+                            rows="5"
+                            placeholder="Write your notification message..."></textarea>
+
+                    </label>
+
+
+                    <label>
+
+                        Send To
+
+                        <select id="notificationTarget">
+
+                            <option value="all">
+                                All Users
+                            </option>
+
+                            <option value="user">
+                                Particular User
+                            </option>
+
+                        </select>
+
+                    </label>
+
+
+                    <!-- PARTICULAR USER -->
+
+                    <div
+                        id="notificationUserBox"
+                        class="hidden">
+
+                        <label>
+
+                            Select User
+
+                            <select id="notificationUser">
+
+                                <option value="">
+                                    Select a user
+                                </option>
+
+                            </select>
+
+                        </label>
+
+                    </div>
+
+
+                    <button
+                        class="primary"
+                        id="sendNotificationBtn"
+                        type="button">
+
+                        Send Notification
+
+                    </button>
+
+                </div>
+
+
+                <!-- SENT NOTIFICATIONS -->
+
+                <div
+                    class="panel"
+                    style="margin-top:20px;">
+
+                    <h2>
+                        Sent Notifications
+                    </h2>
+
+
+                    <div id="sentNotifications">
+
+                        <p class="muted">
+                            No notifications sent yet.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ==================================================
+                 SETTINGS
+            =================================================== -->
+
+            <section
+                id="settings"
+                class="section">
+
+                <div class="head">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            CONTROL
+                        </p>
+
+                        <h1>
+                            Settings
+                        </h1>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <label class="toggle">
+
+                        <input
+                            type="checkbox"
+                            id="siteStatus"
+                            checked>
+
+                        <span>
+                            Site active
+                        </span>
+
+                    </label>
+
+
+                    <button
+                        class="primary"
+                        id="saveSettings"
+                        type="button">
+
+                        Save Settings
+
+                    </button>
+
+
+                    <button
+                        class="danger"
+                        id="clearDemo"
+                        type="button">
+
+                        Clear sandbox purchases
+
+                    </button>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+
+    <!-- ======================================================
+         PRODUCT MODAL
+    ======================================================= -->
+
+    <div
+        id="modal"
+        class="modal">
+
+        <div class="modal-card">
+
+            <button
+                class="close"
+                id="closeModal"
+                type="button">
+
+                ×
+
+            </button>
+
+
+            <h2 id="modalTitle">
+                New Product
+            </h2>
+
+
+            <form id="productForm">
+
+                <input
+                    type="hidden"
+                    id="productId">
+
+
+                <label>
+
+                    Name
+
+                    <input
+                        id="pName"
+                        type="text"
+                        required>
+
+                </label>
+
+
+                <label>
+
+                    Price / display value
+
+                    <input
+                        id="pPrice"
+                        type="text"
+                        placeholder="Sandbox">
+
+                </label>
+
+
+                <label>
+
+                    Prize
+
+                    <input
+                        id="pPrize"
+                        type="text"
+                        required>
+
+                </label>
+
+
+                <label>
+
+                    Description
+
+                    <textarea
+                        id="pDesc"
+                        rows="3"></textarea>
+
+                </label>
+
+
+                <label>
+
+                    Image URL
+
+                    <input
+                        id="pImage"
+                        type="text">
+
+                </label>
+
+
+                <label>
+
+                    Total ticket numbers
+
+                    <input
+                        id="pTotal"
+                        type="number"
+                        min="1"
+                        value="100">
+
+                </label>
+
+
+                <label>
+
+                    Status
+
+                    <select id="pStatus">
+
+                        <option value="active">
+                            Active
+                        </option>
+
+                        <option value="paused">
+                            Paused
+                        </option>
+
+                    </select>
+
+                </label>
+
+
+                <button
+                    class="primary"
+                    type="submit">
+
+                    Save Product
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ======================================================
+         FIREBASE
+    ======================================================= -->
+
+    <script type="module">
+
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+
+        import {
+            getAuth
+        } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+        import {
+            getFirestore
+        } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+        const firebaseConfig = {
+
+            apiKey:
+                "AIzaSyB61InR_o5Yx6oqVQHny8C8zCmn2TANTjc",
+
+            authDomain:
+                "belucky-d9520.firebaseapp.com",
+
+            projectId:
+                "belucky-d9520",
+
+            storageBucket:
+                "belucky-d9520.firebasestorage.app",
+
+            messagingSenderId:
+                "1079754426594",
+
+            appId:
+                "1:1079754426594:web:fc7ebdc562b559f8e2b6bb"
+
+        };
+
+
+        const app =
+            initializeApp(firebaseConfig);
+
+
+        const auth =
+            getAuth(app);
+
+
+        const db =
+            getFirestore(app);
+
+
+        window.firebaseAuth =
+            auth;
+
+
+        window.firebaseDB =
+            db;
+
+    </script>
+
+
+
+    <!-- ======================================================
+         ADMIN JAVASCRIPT
+    ======================================================= -->
+
+    <script
+        type="module"
+        src="admin.js">
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,1154 @@
+* {
+    box-sizing: border-box
+}
+
+body {
+    margin: 0;
+    font-family: Inter, Arial, sans-serif;
+    background: #080b12;
+    color: #eef2ff;
+    min-height: 100vh
+}
+
+a {
+    color: inherit;
+    text-decoration: none
+}
+
+.topbar {
+
+    height: 85px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4%;
+    background: rgba(7, 13, 25, 0.96);
+    border-bottom: 1px solid #1d3158;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+}
+
+
+/* ===============================
+   BRAND
+================================ */
+
+.brand {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 34px;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+
+.brand span {
+    color: #7084ff;
+}
+
+/* ===============================
+   NAVIGATION
+================================ */
+
+.topbar nav {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 34px;
+
+}
+
+
+.topbar nav a {
+
+    position: relative;
+
+    text-decoration: none;
+
+    color: #e8ecf7;
+
+    font-size: 17px;
+
+    transition:
+        color 0.25s ease;
+
+}
+
+
+.topbar nav a:hover {
+
+    color: #7d91ff;
+
+}
+
+/* ACTIVE HOME / PAGE */
+
+.topbar nav a.active {
+    color: #7c90ff;
+
+}
+
+.bini {
+
+    width: auto;
+    height: auto;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    border-radius: 13px;
+    border: 1px solid #243d6d;
+    background: rgba(72, 98, 190, 0.10);
+    padding: 8px;
+
+}
+
+.nav-btn{
+    background: transparent;
+    color: #fff;
+    border: none;
+}
+
+/* ===============================
+   NOTIFICATION NAV
+================================ */
+
+.notification-nav {
+
+    width: auto;
+    height: auto;
+
+}
+
+
+/* BELL */
+
+.bell-icon {
+
+    font-size: 25px;
+
+    line-height: 1;
+
+}
+
+/* ===============================
+   BADGE
+================================ */
+
+.notification-badge {
+
+    position: absolute;
+
+    top: -6px;
+
+    right: -7px;
+
+    min-width: 20px;
+
+    height: 20px;
+
+    padding: 0 5px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50px;
+
+    background: #ff3f70;
+
+    color: white;
+
+    font-size: 11px;
+
+    font-weight: 900;
+
+    border: 2px solid #080d18;
+
+}
+
+
+/* ===============================
+   MAIN
+================================ */
+
+.notification-container {
+
+    width: min(
+        1150px,
+        92%
+    );
+
+    margin:
+        35px auto 60px;
+
+}
+
+
+/* ===============================
+   PANEL
+================================ */
+
+.notification-panel {
+
+    padding:
+        30px;
+
+    border:
+        1px solid #164e9d;
+
+    border-radius:
+        22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(9, 25, 55, 0.95),
+            rgba(5, 15, 32, 0.96)
+        );
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.35),
+        0 0 35px rgba(35, 90, 210, 0.08);
+
+}
+
+
+/* ===============================
+   HEADER
+================================ */
+
+.notification-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 25px;
+
+}
+
+
+.eyebrow {
+
+    margin-bottom: 8px;
+
+    color: #7e96ff;
+
+    font-size: 14px;
+
+    font-weight: 900;
+
+    letter-spacing: 3px;
+
+}
+
+
+.notification-header h1 {
+
+    font-size: 48px;
+
+    line-height: 1.1;
+
+    margin-bottom: 10px;
+
+}
+
+
+.subtitle {
+
+    color: #8fa6d8;
+
+    font-size: 17px;
+
+    line-height: 1.5;
+
+}
+
+
+/* ===============================
+   READ ALL
+================================ */
+
+.read-all-btn {
+
+    flex-shrink: 0;
+
+    padding: 13px 20px;
+    border: 1px solid #2861b8;
+    border-radius: 30px;
+    background: rgba(20, 53, 105, 0.25);
+    color: #9eb4ff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+
+.read-all-btn:hover {
+    background:
+        rgba(48, 91, 180, 0.35);
+    border-color: #5d83ff;
+    color: white;
+
+}
+
+
+/* ===============================
+   LINE
+================================ */
+
+.header-line {
+
+    height: 1px;
+
+    margin:
+        25px 0 20px;
+
+    background:
+        #193b70;
+
+}
+
+
+/* ===============================
+   NOTIFICATION LIST
+================================ */
+
+.notification-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-link .bell-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+
+
+/* ===============================
+   NOTIFICATION CARD
+================================ */
+
+.notification-card {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    min-height: 84px;
+
+    padding:
+        13px 16px;
+
+    border:
+        1px solid #153e79;
+
+    border-radius:
+        16px;
+
+    background:
+        linear-gradient(
+            100deg,
+            rgba(10, 29, 59, 0.95),
+            rgba(7, 19, 39, 0.95)
+        );
+
+    transition:
+        0.25s ease;
+
+}
+
+
+.notification-card:hover {
+
+    border-color:
+        #2864c0;
+
+    transform:
+        translateY(-1px);
+
+    background:
+        linear-gradient(
+            100deg,
+            rgba(13, 38, 76, 0.98),
+            rgba(8, 24, 48, 0.98)
+        );
+
+}
+
+
+/* UNREAD */
+
+.notification-card.unread {
+
+    border-color:
+        #1c5cc2;
+
+}
+
+
+/* ===============================
+   ICON
+================================ */
+
+.notification-icon {
+
+    width: 52px;
+
+    height: 52px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius:
+        14px;
+
+    font-size: 23px;
+
+    background:
+        #17326a;
+
+    border:
+        1px solid #2455a0;
+
+}
+
+
+.notification-badge {
+    position: absolute;
+    top: -7px;
+    right: -9px;
+
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+
+    border-radius: 50px;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    background: #ff3b30;
+    color: #fff;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    border: 2px solid #080b13;
+}
+
+
+/* ===============================
+   CONTENT
+================================ */
+
+.notification-content {
+
+    flex: 1;
+
+    min-width: 0;
+
+}
+
+
+.notification-content h3 {
+
+    margin-bottom: 5px;
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+}
+
+
+.notification-content p {
+
+    color: #91a8d7;
+
+    font-size: 14px;
+
+    line-height: 1.45;
+
+}
+
+
+.notification-time {
+
+    display: block;
+
+    margin-top: 5px;
+
+    color: #647da9;
+
+    font-size: 12px;
+
+}
+
+
+/* ===============================
+   UNREAD DOT
+================================ */
+
+.unread-dot {
+
+    width: 9px;
+
+    height: 9px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background:
+        #5979ff;
+
+    box-shadow:
+        0 0 12px #5979ff;
+
+}
+
+
+/* ===============================
+   DELETE BUTTON
+================================ */
+
+.delete-notification {
+
+    width: 34px;
+
+    height: 34px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background:
+        transparent;
+
+    color: #7184a8;
+
+    font-size: 22px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        0.2s ease;
+
+}
+
+
+.delete-notification:hover {
+
+    background:
+        rgba(255, 55, 95, 0.14);
+
+    color:
+        #ff5479;
+
+}
+
+
+/* ===============================
+   EMPTY
+================================ */
+
+.empty-notification {
+
+    display: none;
+
+    padding:
+        80px 20px;
+
+    text-align: center;
+
+}
+
+
+.empty-icon {
+
+    font-size: 48px;
+
+    margin-bottom: 15px;
+
+}
+
+
+.empty-notification h2 {
+
+    margin-bottom: 8px;
+
+    font-size: 24px;
+
+}
+
+
+.empty-notification p {
+
+    color: #7183a5;
+
+}
+
+
+/* ===============================
+   FOOTER
+================================ */
+
+.footer {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 28px;
+
+    margin-top: 25px;
+
+}
+
+
+.footer span {
+
+    width: 115px;
+
+    height: 1px;
+
+    background:
+        #1d3864;
+
+}
+
+
+.footer p {
+
+    color: #66799e;
+
+    font-size: 12px;
+
+}
+
+
+.container {
+    width: min(1180px, 92%);
+    margin: 40px auto;
+}
+
+.narrow {
+    max-width: 760px
+}
+
+.hero {
+    padding: 40px 7%;
+    border: 1px solid #222a3d;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #151b2c, #0d111b);
+    margin-bottom: 50px
+}
+
+.hero h1 {
+    font-size: clamp(38px, 6vw, 72px);
+    line-height: 1;
+    margin: 10px 0 18px
+}
+
+.hero p {
+    color: #aab5cd;
+    max-width: 650px;
+    line-height: 1.7
+}
+
+.eyebrow {
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #8ea2ff;
+    font-weight: 800
+}
+
+.section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px
+}
+
+.section-head h2 {
+    margin: 5px 0;
+    font-size: 30px
+}
+
+.pill {
+    border: 1px solid #34405c;
+    border-radius: 999px;
+    padding: 8px 14px;
+    color: #a9b7d5
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px
+}
+
+.product-card,
+.panel,
+.auth-card,
+.profile-card {
+    background: #101521;
+    border: 1px solid #242d42;
+    border-radius: 22px;
+    padding: 22px;
+    box-shadow: 0 18px 45px #0003
+}
+
+.product-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 16px;
+    background: #171e2d
+}
+
+.product-card h3 {
+    margin: 14px 0 6px
+}
+
+.muted,
+
+.price {
+    font-size: 22px;
+    font-weight: 900;
+    margin: 12px 0
+}
+
+.btn {
+    display: block;
+    width: fit-content;
+    border: 0;
+    border-radius: 14px;
+    padding: 12px 22px;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+    margin: 10px auto 0;
+    box-sizing: border-box;
+    font-family: Phantomsans, sans-serif;
+    text-decoration: none;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+}
+
+.primary {
+    position: relative;
+    overflow: hidden;
+
+    background: linear-gradient(
+        135deg,
+        #8095ff,
+        #6677ff
+    );
+
+    color: #fff;
+
+    box-shadow:
+        0 8px 20px rgba(102, 119, 255, 0.30),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* Shine effect */
+.primary::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.25),
+        transparent
+    );
+
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+}
+
+/* Hover */
+.primary:hover {
+    background: linear-gradient(
+        135deg,
+        #91a2ff,
+        #7282ff
+    );
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 14px 28px rgba(102, 119, 255, 0.40),
+        0 0 18px rgba(128, 149, 255, 0.25);
+}
+
+/* Shine moves on hover */
+.primary:hover::before {
+    left: 140%;
+}
+
+/* Click effect */
+.primary:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+.ghost {
+    display: block;
+    margin: 10px auto;
+    background: #1a2130;
+    color: #fff;
+    border: 1px solid #303a52
+}
+
+.auth-wrap {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 20px
+}
+
+.auth-card {
+    width: min(520px, 100%)
+}
+
+.auth-card.wide {
+    width: min(720px, 100%)
+}
+
+label {
+    color: #ffffff;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+
+    text-shadow:
+        0 0 10px rgba(128, 149, 255, 0.25);
+
+    transition: 0.25s ease;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    border: 1px solid #303a50;
+    background: #0b1019;
+    color: #eef2ff;
+    border-radius: 11px;
+    padding: 12px;
+    font: inherit;
+    outline: none
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 15px
+}
+
+.full {
+    grid-column: 1/-1
+}
+
+.otp-box {
+    padding: 15px;
+    border: 1px dashed #39435d;
+    border-radius: 15px
+}
+
+.divider {
+    text-align: center;
+    color: #65708a;
+    margin: 20px 0
+}
+
+.profile-card {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+    margin-bottom: 30px
+}
+
+.profile-card img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover
+}
+
+.ticket-list {
+    display: grid;
+    gap: 12px
+}
+
+.ticket-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 16px;
+    border: 1px solid #263047;
+    border-radius: 15px;
+    background: #101622
+}
+
+.ticket-code {
+    font-family: monospace;
+    font-size: 18px;
+    font-weight: 900
+}
+
+.notice {
+    padding: 15px;
+    border-radius: 14px;
+    background: #181e2d;
+    color: #b9c3d9;
+    margin: 18px 0;
+    line-height: 1.6
+}
+
+.empty {
+    padding: 30px;
+    text-align: center;
+    border: 1px dashed #364057;
+    border-radius: 16px;
+    color: #8d98b1
+}
+
+.payment-placeholder {
+    border: 1px solid #2a3448;
+    border-radius: 16px;
+    padding: 20px;
+    margin: 20px 0;
+    background: #0c111a
+}
+
+.payment-icon {
+    font-size: 32px
+}
+
+.fake-input {
+    height: 44px;
+    border: 1px solid #303a50;
+    border-radius: 10px;
+    margin-top: 12px
+}
+
+.fake-input.short {
+    width: 55%
+}
+
+
+.b2 {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+
+/* ===============================
+   MOBILE
+================================ */
+
+@media (max-width: 700px) {
+
+    .topbar {
+        margin-top: 30px;
+        height: 72px;
+        padding: 0 16px;
+    }
+
+    .brand {
+        font-size: 26px;
+    }
+
+    .topbar nav {
+        gap: 13px;
+    }
+
+    .topbar nav a {
+        font-size: 14px;
+    }
+
+    .notification-nav {
+        width: auto;
+        height: auto;
+    }
+    
+    .hero {
+        padding: 45px 25px
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr
+    }
+
+    .profile-card {
+        align-items: flex-start;
+        flex-direction: column
+    }
+
+    .ticket-item {
+        flex-direction: column
+    }
+
+    .bell-icon {
+
+        font-size: 21px;
+        line-height: 1;
+
+    }
+
+    .notification-container {
+
+        width: 94%;
+
+        margin-top: 20px;
+
+    }
+
+    .notification-panel {
+
+        padding: 18px;
+
+        border-radius: 18px;
+
+    }
+
+    .notification-header {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+    }
+
+    .notification-header h1 {
+
+        font-size: 34px;
+
+    }
+
+    .subtitle {
+
+        font-size: 14px;
+
+    }
+
+    .read-all-btn {
+
+        width: 100%;
+
+    }
+
+    .notification-card {
+
+        gap: 11px;
+
+        padding: 12px;
+
+    }
+
+    .notification-icon {
+
+        width: 43px;
+
+        height: 43px;
+
+        font-size: 19px;
+
+    }
+
+    .notification-content h3 {
+
+        font-size: 14px;
+
+    }
+
+    .notification-content p {
+
+        font-size: 12px;
+
+    }
+
+
+    .notification-time {
+
+        font-size: 11px;
+
+    }
+
+
+    .delete-notification {
+
+        width: 29px;
+
+        height: 29px;
+
+        font-size: 20px;
+
+    }
+
+
+    .unread-dot {
+
+        width: 7px;
+
+        height: 7px;
+
+    }
+
+
+    .footer span {
+
+        width: 50px;
+
+    }
+
+}

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>beLucky Register</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="auth-wrap">
+        <div class="auth-card wide">
+
+            <a class="brand" href="index.html">
+                be<span>Lucky</span>
+            </a>
+
+            <h1>Create your profile</h1>
+
+            <form id="registerForm" class="form-grid">
+
+                <label>
+                    Full name
+                    <input id="regName" required>
+                </label>
+
+                <label>
+                    Email
+                    <input id="regEmail" type="email" required>
+                </label>
+
+                <label>
+                    Mobile number
+                    <input id="regMobile" inputmode="numeric" required>
+                </label>
+
+                <label>
+                    Password
+                    <input id="regPassword" type="password" minlength="6" required>
+                </label>
+
+                <label>
+                    Confirm password
+                    <input id="regPassword2" type="password" required>
+                </label>
+
+                <label class="full">
+                    Address
+                    <textarea id="regAddress" rows="3" required></textarea>
+                </label>
+
+                <label class="full">
+                    Profile picture
+                    <input id="regAvatar" type="file" accept="image/*">
+                </label>
+
+                <button class="btn primary full" type="submit">
+                    Create Account
+                </button>
+
+            </form>
+
+            <p>
+                Already registered?
+                <a href="login.html">Login</a>
+            </p>
+
+        </div>
+    </div>
+
+    <script type="module">
+
+    import { initializeApp }
+        from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+    import { getAuth }
+        from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+    import { getFirestore }
+        from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";    
+
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB61InR_o5Yx6oqVQHny8C8zCmn2TANTjc",
+        authDomain: "belucky-d9520.firebaseapp.com",
+        projectId: "belucky-d9520",
+        storageBucket: "belucky-d9520.firebasestorage.app",
+        messagingSenderId: "1079754426594",
+        appId: "1:1079754426594:web:fc7ebdc562b559f8e2b6bb"
+    };
+
+
+    const app = initializeApp(firebaseConfig);
+
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    window.firebaseAuth = auth;
+    window.firebaseDB = db;
+
+</script>
+
+<script type="module" src="app.js"></script>
+</body>
+
+</html>

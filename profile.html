@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>beLucky Profile</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <header class="topbar">
+            <a class="brand" href="index.html">be<span>Lucky</span></a>
+            <nav>
+                <a href="index.html">Home</a>
+                <div class="bini"><a href="profile.html">Profile</a></div>
+                <a
+                href="notification.html" class="notification-nav active" title="Notifications">
+                <span class="bell-icon">🔔</span>
+
+                <span id="notificationBadge" class="notification-badge">
+                    0
+                </span>
+            </a>
+                <button class="nav-btn" id="logoutBtn">Logout</button>
+            </nav>
+        </header>
+        <main class="container">
+            <section id="profileBox">
+
+            </section>
+            <section>
+                <div class="section-head">
+                    <div>
+                        <p class="eyebrow">MY ACTIVITY</p>
+                        <h2>Purchased Tickets</h2>
+                    </div>
+                </div>
+                <div id="myTickets" class="ticket-list">
+
+                </div>
+            </section>
+        </main>
+        <script type="module" src="app.js"></script>
+    </body>
+    
+</html>

@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>beLucky</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <header class="topbar">
+            <a class="brand" href="index.html">be<span>Lucky</span></a>
+            <nav>
+                <div class="bini"><a href="index.html">Home</a></div>
+                <a href="profile.html">Profile</a>
+                <a
+                href="notification.html" class="notification-nav active" title="Notifications">
+                <span class="bell-icon">🔔</span>
+
+                <span id="notificationBadge" class="notification-badge">
+                    0
+                </span>
+            </a>
+                <a href="login.html">Login</a>
+            </nav>
+        </header>
+        <main class="container">
+            <section class="hero">
+                <p class="eyebrow">lucky CONTROL CENTER</p>
+                <h1>Choose your prize product.</h1>
+                <p>Safe local sandbox: browse products, select a ticket number and test the checkout flow.</p>
+                <a class="btn primary" href="#products">Explore Products</a>
+            </section>
+            <section id="products">
+                <div class="section-head">
+                    <div>
+                        <p class="eyebrow">AVAILABLE</p>
+                        <h2>Prize Products</h2>
+                    </div>
+                    <span id="siteNotice" class="pill">Active</span>
+                </div>
+                <div id="productGrid" class="product-grid"></div>
+            </section>
+        </main>
+
+
+<script>
+function updateNotificationBadge() {
+
+    const badge = document.getElementById("notificationBadge");
+
+    if (!badge) return;
+
+    const allNotifications =
+        JSON.parse(localStorage.getItem("a66aNotifications")) || [];
+
+    const currentUser =
+        JSON.parse(localStorage.getItem("a66aCurrentUser"));
+
+    if (!currentUser) {
+        badge.style.display = "none";
+        return;
+    }
+
+    const unreadCount =
+        allNotifications.filter(notification => {
+
+            const isForUser =
+                notification.target === "all" ||
+                notification.target === currentUser.id;
+
+            const isUnread =
+                notification.read !== true;
+
+            return isForUser && isUnread;
+
+        }).length;
+
+    if (unreadCount > 0) {
+
+        badge.textContent =
+            unreadCount > 99 ? "99+" : unreadCount;
+
+        badge.style.display = "flex";
+
+    } else {
+
+        badge.style.display = "none";
+
+    }
+}
+
+updateNotificationBadge();
+
+setInterval(updateNotificationBadge, 1000);
+</script>
+
+<script type="module">
+
+    import { initializeApp }
+        from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+    import { getAuth }
+        from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+    import { getFirestore }
+        from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB61InR_o5Yx6oqVQHny8C8zCmn2TANTjc",
+        authDomain: "belucky-d9520.firebaseapp.com",
+        projectId: "belucky-d9520",
+        storageBucket: "belucky-d9520.firebasestorage.app",
+        messagingSenderId: "1079754426594",
+        appId: "1:1079754426594:web:fc7ebdc562b559f8e2b6bb"
+    };
+
+
+    const app = initializeApp(firebaseConfig);
+
+    const auth = getAuth(app);
+
+    const db = getFirestore(app);
+
+    window.firebaseDB = db;
+
+    window.firebaseAuth = auth;
+
+</script>
+
+<script type="module" src="app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>beLucky Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="auth-wrap">
+
+        <div class="auth-card">
+
+            <a class="brand" href="index.html">be<span>Lucky</span></a>
+
+            <h1>Welcome back</h1>
+
+            <p>Login with mobile + password, or use OTP.</p>
+
+
+            <!-- Normal Login -->
+            <div id="loginSection">
+
+                <form id="loginForm">
+
+                    <label>
+                        Mobile number
+                        <input id="loginMobile" inputmode="numeric" required>
+                    </label>
+
+                    <label>
+                        Password
+                        <input id="loginPassword" type="password">
+                    </label>
+
+                    <button class="btn primary" type="submit">
+                        Login
+                    </button>
+
+                </form>
+
+                <div class="divider">OR</div>
+
+                <button class="btn ghost" id="otpLoginBtn" type="button">
+                    Login with OTP
+                </button>
+
+            </div>
+
+
+            <!-- OTP Login -->
+            <div id="otpSection" style="display: none;">
+
+                <label>
+                    Mobile number
+                    <input id="otpMobile" inputmode="numeric" required>
+                </label>
+
+                <label>
+                    Enter OTP
+                    <input id="otpInput" inputmode="numeric" maxlength="6" required>
+                </label>
+
+                <button class="btn primary" id="otpSubmitBtn" type="button">
+                    Login
+                </button>
+
+                <button class="btn ghost" id="resendOtpBtn" type="button">
+                    Resend OTP
+                </button>
+
+            </div>
+
+
+            <p>
+
+                <button class="b2" type="button" id="adminLoginBtn">B2</button>
+
+                New user?
+                <a href="register.html">Create profile</a>
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <script type="module" src="app.js"></script>
+
+</body>
+
+</html>
