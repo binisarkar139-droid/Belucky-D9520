@@ -1,32 +1,95 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+const express = require("express");
+const cors = require("cors");
+const Razorpay = require("razorpay");
+const crypto = require("crypto");
 
-const {setGlobalOptions} = require("firebase-functions");
-const {onRequest} = require("firebase-functions/https");
-const logger = require("firebase-functions/logger");
+const app = express();
 
-// For cost control, you can set the maximum number of containers that can be
-// running at the same time. This helps mitigate the impact of unexpected
-// traffic spikes by instead downgrading performance. This limit is a
-// per-function limit. You can override the limit for each function using the
-// `maxInstances` option in the function's options, e.g.
-// `onRequest({ maxInstances: 5 }, (req, res) => { ... })`.
-// NOTE: setGlobalOptions does not apply to functions using the v1 API. V1
-// functions should each use functions.runWith({ maxInstances: 10 }) instead.
-// In the v1 API, each function can only serve one request per container, so
-// this will be the maximum concurrent request count.
-setGlobalOptions({ maxInstances: 10 });
+app.use(cors({
+  origin: [
+    "https://belucky-d9520.web.app",
+    "https://belucky-d9520.firebaseapp.com"
+  ]
+}));
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
+app.use(express.json());
 
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+function getRazorpay() {
+  const key_id = process.env.RAZORPAY_KEY_ID;
+  const key_secret = process.env.RAZORPAY_KEY_SECRET;
+
+  if (!key_id || !key_secret) {
+    throw new Error("Razorpay environment variables are missing");
+  }
+
+  return new Razorpay({ key_id, key_secret });
+}
+
+app.get("/", (req, res) => {
+  res.send("beLucky payment API is running");
+});
+
+app.post("/create-order", async (req, res) => {
+  try {
+    const amount = Number(req.body.amount);
+
+    // Amount is in paise. Limit this endpoint to safe test amounts.
+    if (!Number.isInteger(amount) || amount < 100 || amount > 100000) {
+      return res.status(400).json({ error: "Invalid amount" });
+    }
+
+    const order = await getRazorpay().orders.create({
+      amount,
+      currency: "INR",
+      receipt: "bl_" + crypto.randomUUID()
+    });
+
+    res.json({
+      orderId: order.id,
+      amount: order.amount,
+      currency: order.currency,
+      keyId: process.env.RAZORPAY_KEY_ID
+    });
+  } catch (error) {
+    console.error("Create order failed:", error.message);
+    res.status(500).json({ error: "Unable to create payment order" });
+  }
+});
+
+app.post("/verify-payment", (req, res) => {
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
+  if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+    return res.status(400).json({ verified: false, error: "Missing payment details" });
+  }
+
+  try {
+    const secret = process.env.RAZORPAY_KEY_SECRET;
+    if (!secret) throw new Error("Missing Razorpay secret");
+
+    const expected = crypto
+      .createHmac("sha256", secret)
+      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+      .digest("hex");
+
+    const actualBuffer = Buffer.from(razorpay_signature, "hex");
+    const expectedBuffer = Buffer.from(expected, "hex");
+
+    if (
+      actualBuffer.length !== expectedBuffer.length ||
+      !crypto.timingSafeEqual(actualBuffer, expectedBuffer)
+    ) {
+      return res.status(400).json({ verified: false, error: "Invalid signature" });
+    }
+
+    res.json({ verified: true });
+  } catch (error) {
+    console.error("Payment verification failed:", error.message);
+    res.status(500).json({ verified: false, error: "Verification failed" });
+  }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`beLucky payment API listening on port ${PORT}`);
+});
