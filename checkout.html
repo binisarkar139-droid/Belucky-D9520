@@ -24,10 +24,39 @@
                 <div class="fake-input"></div>
                 <div class="fake-input short"></div>
             </div>
-            <div class="notice">Sandbox only — koi real payment process nahi hota.</div><button id="sandboxPay"
-                class="btn primary">Continue / Test Purchase</button><a class="btn ghost" href="index.html">Cancel</a>
+            <div class="notice">Sandbox only — koi real payment process nahi hota.</div>
+            <button id="sandboxPay" class="btn primary">Pay</button>
+            <a class="btn ghost" href="index.html">Cancel</a>
         </section>
     </main>
+
+    
+<script type="module">
+    import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB61InR_o5Yx6oqVQHny8C8zCmn2TANTjc",
+        authDomain: "belucky-d9520.firebaseapp.com",
+        projectId: "belucky-d9520",
+        storageBucket: "belucky-d9520.firebasestorage.app",
+        messagingSenderId: "1079754426594",
+        appId: "1:1079754426594:web:fc7ebdc562b559f8e2b6bb"
+    };
+
+    const app = getApps().length
+        ? getApps()[0]
+        : initializeApp(firebaseConfig);
+
+    window.firebaseAuth = getAuth(app);
+    window.firebaseDB = getFirestore(app);
+</script>
+
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
     <script type="module" src="app.js"></script>
 </body>
 

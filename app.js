@@ -193,6 +193,46 @@ async function syncLotteriesFromFirebase() {
 
     }
 }
+
+async function syncTicketsFromFirebase() {
+    try {
+        const {
+            collection,
+            getDocs
+        } = await import(
+            "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js"
+        );
+
+        const db = window.firebaseDB;
+
+        if (!db) {
+            throw new Error("Firebase DB initialize nahi hua.");
+        }
+
+        const snapshot = await getDocs(
+            collection(db, "a66aTickets")
+        );
+
+        const firebaseTickets = snapshot.docs.map(d => ({
+            ...d.data(),
+            id: d.id
+        }));
+
+        set(K.tickets, firebaseTickets);
+
+        console.log(
+            "Firebase tickets loaded:",
+            firebaseTickets.length
+        );
+
+    } catch (error) {
+        console.error(
+            "Firebase tickets load error:",
+            error
+        );
+        throw error;
+    }
+}
 // ===============================
 // DEMO OTP + NOTIFICATION
 // ===============================
@@ -312,7 +352,7 @@ function clearOTP() {
 const ticketNumbers = n => {
     return Array.from(
         { length: n },
-        (_, i) => "B" + String(1000000000 + i).padStart(10, "0")
+        (_, i) => "B" + String(100000 + i).padStart(6, "0")
     );
 };
 
@@ -530,22 +570,32 @@ function setupRegister() {
                 
 
 
-                const allUsers = users();
+                // Save user to Firestore first
+if (!window.firebaseDB) {
+    throw new Error("Firestore database initialize nahi hua.");
+}
 
-                allUsers.push(user);
-
-                set(K.users, allUsers);
-
-                set(K.current, user);
-
-
-setDoc(
-    doc(window.firebaseDB, "a66aUsers", firebaseUser.uid),
+await setDoc(
+    doc(
+        window.firebaseDB,
+        "a66aUsers",
+        firebaseUser.uid
+    ),
     user
 );
 
+console.log("User Firestore me save ho gaya:", user);
 
-                location.href = "profile.html";
+// Save user locally
+const allUsers = users();
+
+allUsers.push(user);
+
+set(K.users, allUsers);
+set(K.current, user);
+
+// Go to profile
+location.href = "profile.html";
             };
 
 
@@ -810,10 +860,7 @@ const firebaseConfig = {
     appId: "1:1079754426594:web:fc7ebdc562b559f8e2b6bb"
 };
 
-const app =
-    getApps().length > 0
-        ? getApps()[0]
-        : initializeApp(firebaseConfig);
+const app = getApps().length > 0 ? getApps()[0] : initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
 
@@ -1037,7 +1084,7 @@ const auth = getAuth(app);
             if (!/^\d{6}$/.test(enteredOTP)) {
 
                 alert(
-                    "6 digit OTP enter karo."
+                    "6 digit capture code enter karo."
                 );
 
                 return;
@@ -1061,7 +1108,7 @@ const auth = getAuth(app);
 
                 alert(
                     error.message ||
-                    "OTP galat hai."
+                    "capture code galat hai."
                 );
 
                 return;
@@ -1069,8 +1116,7 @@ const auth = getAuth(app);
 
 
             // =================================
-            // OTP CORRECT
-            // MOBILE SE USER FIND
+            // OTP CORRECT, MOBILE SE USER FIND
             // =================================
 
             const user =
@@ -1170,7 +1216,7 @@ const auth = getAuth(app);
 
                 alert(
                     error.message ||
-                    "OTP resend nahi hua."
+                    "capture code resend nahi hua."
                 );
 
             } finally {
@@ -1179,7 +1225,7 @@ const auth = getAuth(app);
                     false;
 
                 resendOtpBtn.textContent =
-                    "Resend OTP";
+                    "Resend capture code";
 
             }
 
@@ -1387,14 +1433,20 @@ function setupCheckout() {
     }
 
 
-    const lotteryId =
-        new URLSearchParams(location.search)
-            .get("lottery");
+    const lotteryId = new URLSearchParams(location.search).get("lottery");
 
-    const lottery =
-        lotteries().find(
-            item => item.id === lotteryId
-        );
+    const lottery = lotteries().find(item => item.id === lotteryId);
+
+        const ticketPrice = Number(lottery?.price);
+
+        if (!Number.isFinite(ticketPrice) || ticketPrice <= 0) {
+    summary.innerHTML = `
+        <p class="empty">
+            Invalid ticket price. Admin panel mein sahi price set karo.
+        </p>
+    `;
+    return;
+}
 
     const user = current();
 
@@ -1446,14 +1498,11 @@ function setupCheckout() {
 
     summary.innerHTML = `
 
-        <p>
-            <b>Prize:</b>
-            ${esc(lottery.prize)}
-        </p>
+        <p><b>Prize:</b>  ${esc(lottery.prize)}</p>
 
-        <p>
-            ${esc(lottery.description)}
-        </p>
+        <p><b>Ticket Price:</b> ₹${ticketPrice.toFixed(2)}</p>
+
+        <p> ${esc(lottery.description)}</p>
 
         <label>
             Select ticket number
@@ -1479,82 +1528,138 @@ function setupCheckout() {
     `;
 
 
-    // SANDBOX PAYMENT
-    const paymentButton =
-        document.getElementById("sandboxPay");
+    
+    // RAZORPAY TEST PAYMENT
+    const PAYMENT_API = "https://belucky-d9520.onrender.com";
 
+    const paymentButton = document.getElementById("sandboxPay");
 
     if (paymentButton) {
-
-        paymentButton.onclick = () => {
-
-
-            const select =
-                document.getElementById(
-                    "ticketSelect"
-                );
-
+        paymentButton.onclick = async () => {
+            const select = document.getElementById("ticketSelect");
 
             if (!select) {
-
                 alert("Ticket select nahi hua.");
-
                 return;
             }
-
 
             const number = select.value;
 
-
-            const allTickets = tickets();
-
-
-            // Duplicate ticket check
-            if (
-                allTickets.some(
-                    ticket =>
-                        ticket.lotteryId === lotteryId &&
-                        ticket.number === number
-                )
-            ) {
-
-                alert("Ticket already selected.");
-
+            if (!number) {
+                alert("Pehle ticket number select karo.");
                 return;
             }
 
+            if (!Number.isFinite(ticketPrice) || ticketPrice <= 0) {
+                alert("Admin panel mein valid ticket price set karo.");
+                return;
+            }
 
-            // Save ticket
-            allTickets.push({
+            paymentButton.disabled = true;
 
-                id: uid(),
+            try {
+                // Create Razorpay order (amount is in paise)
+                const orderResponse = await fetch(
+                    `${PAYMENT_API}/create-order`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            amount: Math.round(ticketPrice * 100)
+                        })
+                    }
+                );
 
-                userId: user.id,
+                const orderData = await orderResponse.json();
 
-                mobile: user.mobile,
+                if (!orderResponse.ok) {
+                    throw new Error(
+                        orderData.error || "Order create nahi hua."
+                    );
+                }
 
-                lotteryId: lotteryId,
+                if (!window.Razorpay) {
+                    throw new Error("Razorpay Checkout script load nahi hui.");
+                }
 
-                lotteryName: lottery.name,
+                const options = {
+                    key: orderData.keyId,
+                    amount: orderData.amount,
+                    currency: orderData.currency,
+                    name: "beLucky",
+                    description: `Ticket ${number} - ${lottery.name}`,
+                    order_id: orderData.orderId,
 
-                number: number,
+                    handler: async function (response) {
+                        try {
+                            const verifyResponse = await fetch(
+                                `${PAYMENT_API}/verify-payment`,
+                                {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json"
+                                    },
+                                    body: JSON.stringify({
+                                        razorpay_order_id:
+                                            response.razorpay_order_id,
+                                        razorpay_payment_id:
+                                            response.razorpay_payment_id,
+                                        razorpay_signature:
+                                            response.razorpay_signature
+                                    })
+                                }
+                            );
 
-                status: "sandbox-paid",
+                            const verifyData = await verifyResponse.json();
 
-                date: new Date().toLocaleString()
+                            if (!verifyResponse.ok || !verifyData.verified) {
+                                alert(
+                                    "Payment verify nahi hua. Ticket issue nahi kiya gaya."
+                                );
+                                return;
+                            }
 
-            });
+                            alert(
+                                "Test payment verify ho gaya. Ticket abhi issue nahi hua; ticket reservation ka secure setup baaki hai."
+                            );
+                        } catch (error) {
+                            console.error("Verification error:", error);
+                            alert(
+                                "Payment verification ka result nahi mil saka. Dobara payment karne se pehle status check karo."
+                            );
+                        } finally {
+                            paymentButton.disabled = false;
+                        }
+                    },
 
+                    modal: {
+                        ondismiss: function () {
+                            paymentButton.disabled = false;
+                        }
+                    },
 
-            set(K.tickets, allTickets);
+                    theme: {
+                        color: "#3399cc"
+                    }
+                };
 
+                const checkout = new window.Razorpay(options);
 
-            alert(
-                "Sandbox purchase recorded. No real payment was made."
-            );
+                checkout.on("payment.failed", function (response) {
+                    console.error("Razorpay payment failed:", response.error);
+                    alert("Test payment fail hua. Dobara try kar sakte ho.");
+                    paymentButton.disabled = false;
+                });
 
+                checkout.open();
 
-            location.href = "profile.html";
+            } catch (error) {
+                console.error("Payment error:", error);
+                alert(error.message || "Payment start nahi ho paya.");
+                paymentButton.disabled = false;
+            }
         };
     }
 }
@@ -1566,17 +1671,18 @@ function setupCheckout() {
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-        await syncLotteriesFromFirebase();
+    await syncLotteriesFromFirebase();
 
-        renderHome();
-
-        setupRegister();
-
-        setupLogin();
-
-        setupProfile();
-
-        setupCheckout();
-
+    try {
+        await syncTicketsFromFirebase();
+    } catch (error) {
+        console.error("Shared tickets load nahi hue:", error);
     }
-);
+
+    renderHome();
+    setupRegister();
+    setupLogin();
+    setupProfile();
+    setupCheckout();
+
+});
