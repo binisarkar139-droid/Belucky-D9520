@@ -56,17 +56,33 @@ app.post("/create-order", async (req, res) => {
   }
 });
 
-app.post("/verify-payment", (req, res) => {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
-  if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
-    return res.status(400).json({ verified: false, error: "Missing payment details" });
+app.post("/verify-payment", async (req, res) => {
+  const {
+    razorpay_order_id,
+    razorpay_payment_id,
+    razorpay_signature
+  } = req.body;
+
+  if (
+    !razorpay_order_id ||
+    !razorpay_payment_id ||
+    !razorpay_signature
+  ) {
+    return res.status(400).json({
+      verified: false,
+      error: "Missing payment details"
+    });
   }
 
   try {
     const secret = process.env.RAZORPAY_KEY_SECRET;
-    if (!secret) throw new Error("Missing Razorpay secret");
 
+    if (!secret) {
+      throw new Error("Missing Razorpay secret");
+    }
+
+    // Verify payment signature
     const expected = crypto
       .createHmac("sha256", secret)
       .update(`${razorpay_order_id}|${razorpay_payment_id}`)
@@ -79,13 +95,63 @@ app.post("/verify-payment", (req, res) => {
       actualBuffer.length !== expectedBuffer.length ||
       !crypto.timingSafeEqual(actualBuffer, expectedBuffer)
     ) {
-      return res.status(400).json({ verified: false, error: "Invalid signature" });
+      return res.status(400).json({
+        verified: false,
+        error: "Invalid signature"
+      });
     }
 
-    res.json({ verified: true });
+    // Fetch payment details directly from Razorpay
+    const razorpay = getRazorpay();
+
+    const payment = await razorpay.payments.fetch(
+      razorpay_payment_id
+    );
+
+    if (
+      payment.order_id !== razorpay_order_id ||
+      payment.status !== "captured" ||
+      payment.currency !== "INR"
+    ) {
+      return res.status(400).json({
+        verified: false,
+        error: "Payment not captured or details do not match"
+      });
+    }
+
+    // Fetch order and compare amounts
+    const order = await razorpay.orders.fetch(
+      razorpay_order_id
+    );
+
+    if (
+      order.status !== "paid" ||
+      payment.amount !== order.amount
+    ) {
+      return res.status(400).json({
+        verified: false,
+        error: "Payment amount or order status mismatch"
+      });
+    }
+
+    return res.json({
+      verified: true,
+      orderId: order.id,
+      paymentId: payment.id,
+      amount: payment.amount,
+      currency: payment.currency
+    });
+
   } catch (error) {
-    console.error("Payment verification failed:", error.message);
-    res.status(500).json({ verified: false, error: "Verification failed" });
+    console.error(
+      "Payment verification failed:",
+      error.message
+    );
+
+    return res.status(500).json({
+      verified: false,
+      error: "Verification failed"
+    });
   }
 });
 
